@@ -96,6 +96,7 @@ map.on('load', () => {
     
     // Set up the toggle labels checkbox with fancy switch
     const toggleLabelsCheckbox = document.getElementById('toggle-labels');
+    const loadingSpinner = document.getElementById('labels-loading-spinner');
     
     // Set initial state based on checkbox (which is checked by default)
     labelsVisible = toggleLabelsCheckbox.checked;
@@ -107,26 +108,122 @@ map.on('load', () => {
         labelsVisible ? 'visible' : 'none'
     );
     
+    // Flag to track if the labels have been loaded at least once
+    let labelsLoaded = false;
+    
+    // Function to show the loading spinner with a smooth fade-in
+    function showLoadingSpinner() {
+        loadingSpinner.style.display = 'block';
+        // Force a reflow to ensure the display change takes effect before adding the class
+        void loadingSpinner.offsetWidth;
+        loadingSpinner.classList.add('visible');
+    }
+    
+    // Function to hide the loading spinner with a smooth fade-out
+    function hideLoadingSpinner() {
+        loadingSpinner.classList.add('fade-out');
+        loadingSpinner.classList.remove('visible');
+        
+        // Wait for the transition to complete before removing from DOM flow
+        setTimeout(() => {
+            loadingSpinner.style.display = 'none';
+            loadingSpinner.classList.remove('fade-out');
+        }, 500); // Match this to the transition duration in CSS
+    }
+    
+    // Variable to track if we're waiting for labels to render
+    let waitingForLabels = false;
+    
+    // Create a timer to check when labels are truly loaded
+    let labelCheckTimer = null;
+    
+    // Function to check if all labels are rendered
+    function checkLabelsLoaded() {
+        // Get information about the map's label features
+        const features = map.queryRenderedFeatures({ layers: ['building-labels'] });
+        
+        // Only start counting once we see at least some labels (the data is actually loading)
+        if (features.length > 0) {
+            // Keep the spinner visible for at least 3 seconds after some labels appear
+            // This gives the impression of progress and avoids flickering
+            setTimeout(() => {
+                // Check again to ensure all labels are loaded
+                const updatedFeatures = map.queryRenderedFeatures({ layers: ['building-labels'] });
+                
+                // If we have enough labels by now, consider it done
+                if (updatedFeatures.length > 10) {
+                    // Wait a bit longer to ensure most labels are visible
+                    setTimeout(() => {
+                        hideLoadingSpinner();
+                        waitingForLabels = false;
+                        clearInterval(labelCheckTimer);
+                        console.log(`Labels fully loaded: ${updatedFeatures.length} labels rendered`);
+                    }, 1000);
+                }
+            }, 2000);
+            
+            // Clear the interval so we don't keep checking
+            clearInterval(labelCheckTimer);
+        } else {
+            console.log(`Waiting for labels to begin rendering...`);
+        }
+    }
+    
     // Add event listener for the checkbox
     toggleLabelsCheckbox.addEventListener('change', () => {
         labelsVisible = toggleLabelsCheckbox.checked;
         
-        // Toggle the visibility of the labels layer
-        map.setLayoutProperty(
-            'building-labels',
-            'visibility',
-            labelsVisible ? 'visible' : 'none'
-        );
-        
-        // Optional: Add subtle animation to make the transition smoother
         if (labelsVisible) {
-            // Could add fade-in animation here
-            console.log('Labels now visible');
+            // Show loading spinner immediately
+            showLoadingSpinner();
+            waitingForLabels = true;
+            
+            // Toggle the visibility of the labels layer
+            map.setLayoutProperty(
+                'building-labels',
+                'visibility',
+                'visible'
+            );
+            
+            // Start a timer that checks every 500ms if labels are loaded
+            if (labelCheckTimer) {
+                clearInterval(labelCheckTimer);
+            }
+            
+            labelCheckTimer = setInterval(checkLabelsLoaded, 500);
+            
+            // Safety timeout - if labels don't load within 10 seconds, hide spinner
+            setTimeout(() => {
+                if (waitingForLabels) {
+                    hideLoadingSpinner();
+                    waitingForLabels = false;
+                    clearInterval(labelCheckTimer);
+                    console.log('Labels loading timeout reached');
+                }
+            }, 10000);
+            
         } else {
-            // Could add fade-out animation here
+            // For hiding labels, no need to wait
+            map.setLayoutProperty(
+                'building-labels',
+                'visibility',
+                'none'
+            );
+            
+            // Clear any existing timer
+            if (labelCheckTimer) {
+                clearInterval(labelCheckTimer);
+                labelCheckTimer = null;
+            }
+            
+            waitingForLabels = false;
+            hideLoadingSpinner();
             console.log('Labels now hidden');
         }
     });
+    
+    // Hide spinner initially
+    hideLoadingSpinner();
 });
 
 // https://nominatim.oklabflensburg.de/search?q=norderstra%C3%9Fe%2049,%20flensburg
