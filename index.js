@@ -11,6 +11,9 @@ const map = new maplibregl.Map({
     canvasContextAttributes: {antialias: true},
 });
 
+// Flag to track label visibility state
+let labelsVisible = true;
+
 map.on('load', () => {
     // Add the buildings layer
     map.addLayer({
@@ -88,6 +91,40 @@ map.on('load', () => {
             
             // You could add more functionality here like opening a sidebar with details
             console.log('Building clicked:', props.Ansprache, props.Strasse, props.Hausnummer);
+        }
+    });
+    
+    // Set up the toggle labels checkbox with fancy switch
+    const toggleLabelsCheckbox = document.getElementById('toggle-labels');
+    
+    // Set initial state based on checkbox (which is checked by default)
+    labelsVisible = toggleLabelsCheckbox.checked;
+    
+    // Update layer visibility based on initial state
+    map.setLayoutProperty(
+        'building-labels',
+        'visibility',
+        labelsVisible ? 'visible' : 'none'
+    );
+    
+    // Add event listener for the checkbox
+    toggleLabelsCheckbox.addEventListener('change', () => {
+        labelsVisible = toggleLabelsCheckbox.checked;
+        
+        // Toggle the visibility of the labels layer
+        map.setLayoutProperty(
+            'building-labels',
+            'visibility',
+            labelsVisible ? 'visible' : 'none'
+        );
+        
+        // Optional: Add subtle animation to make the transition smoother
+        if (labelsVisible) {
+            // Could add fade-in animation here
+            console.log('Labels now visible');
+        } else {
+            // Could add fade-out animation here
+            console.log('Labels now hidden');
         }
     });
 });

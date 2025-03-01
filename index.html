@@ -6,11 +6,27 @@
   <meta charset='utf-8'>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@5.1.1/dist/maplibre-gl.css' />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel='stylesheet' href='./index.css' />
   <script src='https://unpkg.com/maplibre-gl@5.1.1/dist/maplibre-gl.js'></script>
 </head>
 <body>
   <div id="map"></div>
+  
+  <div class="controls">
+    <div class="toggle-container">
+      <span class="toggle-label">Labels anzeigen</span>
+      <label class="switch">
+        <input type="checkbox" id="toggle-labels" checked>
+        <span class="slider">
+          <span class="text on-text">An</span>
+          <span class="text off-text">Aus</span>
+        </span>
+      </label>
+    </div>
+  </div>
 
   <script src="./index.js"></script>
 </body>
