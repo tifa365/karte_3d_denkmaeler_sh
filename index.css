@@ -143,3 +143,77 @@ input:checked + .slider .off-text {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/* Custom popup styling */
+.maplibregl-popup {
+    max-width: 250px;
+}
+
+.maplibregl-popup-content {
+    background: rgba(20, 20, 20, 0.95);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+    font-family: 'Poppins', sans-serif;
+}
+
+.maplibregl-popup-close-button {
+    color: white;
+    font-size: 16px;
+    padding: 3px 8px;
+}
+
+.maplibregl-popup-tip {
+    border-top-color: rgba(20, 20, 20, 0.95);
+    border-bottom-color: rgba(20, 20, 20, 0.95);
+}
+
+.popup-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #fff;
+}
+
+.popup-address {
+    font-size: 13px;
+    margin: 5px 0;
+    color: #ccc;
+}
+
+.popup-details {
+    font-size: 12px;
+    margin: 8px 0;
+    color: #aaa;
+}
+
+.popup-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: #9000ff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.popup-link:hover {
+    color: #c050ff;
+    text-decoration: underline;
+}
+
+.address-link {
+    color: #4dc0ff;
+    margin-top: 0;
+    font-size: 13px;
+}
+
+.address-link:hover {
+    color: #7dd5ff;
+}
+
+.denkmalkarte {
+    cursor: default;
+    color: #9000ff;
+}

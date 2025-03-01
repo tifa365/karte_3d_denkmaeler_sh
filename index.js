@@ -83,15 +83,65 @@ map.on('load', () => {
         }
     });
 
-    // Add clickable building functionality
+    // Create a popup object for click interaction
+    const popup = new maplibregl.Popup({
+        closeButton: true,
+        closeOnClick: false,
+        maxWidth: '250px',
+        className: 'custom-popup'
+    });
+
+    // Function to generate a shortened address for OSM link
+    function getOSMSearchLink(strasse, hausnummer, ort) {
+        const street = strasse || '';
+        const number = hausnummer || '';
+        const location = ort || 'Flensburg';
+        const query = encodeURIComponent(`${street} ${number}, ${location}`);
+        return `https://www.openstreetmap.org/search?query=${query}`;
+    }
+
+    // Add clickable building functionality with popup
     map.on('click', 'Kulturdenkmale', (e) => {
         if (e.features && e.features.length > 0) {
             const feature = e.features[0];
             const props = feature.properties;
             
-            // You could add more functionality here like opening a sidebar with details
-            console.log('Building clicked:', props.Ansprache, props.Strasse, props.Hausnummer);
+            // Get center coordinates for the popup
+            const coordinates = e.lngLat;
+            
+            // Generate OSM link for the address
+            const osmLink = getOSMSearchLink(props.Strasse, props.Hausnummer, 'Flensburg');
+            
+            // Create popup HTML with styling
+            const popupContent = `
+                <div class="popup-title">${props.Ansprache}</div>
+                <div class="popup-address">
+                    <a href="${osmLink}" target="_blank" rel="noopener noreferrer" class="popup-link address-link">
+                        📍 ${props.Strasse} ${props.Hausnummer}, ${props.Kreis || 'Flensburg'}
+                    </a>
+                </div>
+                ${props.Art ? `<div class="popup-details">Typ: ${props.Art}</div>` : ''}
+                <a href="https://efi2.schleswig-holstein.de/dish/dish_client/index.html?ObjektID=${props.ObjNummer}" 
+                   target="_blank" rel="noopener noreferrer" class="popup-link">
+                   📌 Zur Denkmalkarte
+                </a>
+            `;
+            
+            // Set popup position and content
+            popup
+                .setLngLat(coordinates)
+                .setHTML(popupContent)
+                .addTo(map);
         }
+    });
+    
+    // Change cursor when hovering over buildings
+    map.on('mouseenter', 'Kulturdenkmale', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    
+    map.on('mouseleave', 'Kulturdenkmale', () => {
+        map.getCanvas().style.cursor = '';
     });
     
     // Set up the toggle labels checkbox with fancy switch
