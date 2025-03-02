@@ -4,7 +4,7 @@
 const map = new maplibregl.Map({
     container: 'map',
     style: 'https://sgx.geodatenzentrum.de/gdz_basemapde_vektor/styles/bm_web_gry.json',
-    center: [9.4333264, 54.7833021],
+    center: [10.5678, 53.3730], // Adjusted to focus on Lauenburg Altstadt (slightly to the left)
     zoom: 15,
     pitch: 60,
     bearing: -17.6,
@@ -21,7 +21,7 @@ map.on('load', () => {
         'type': 'fill-extrusion',
         'source': {
             'type': 'geojson',
-            'data': 'https://raw.githubusercontent.com/tursics/opendataday2025/refs/heads/main/denkmalliste-flensburg.geojson'
+            'data': 'denkmaeler-lauenburg-wgs84.geojson'
         },
         'paint': {
             'fill-extrusion-color': 'rgba(215, 59, 59, 1)',
@@ -36,7 +36,7 @@ map.on('load', () => {
         'type': 'symbol',
         'source': {
             'type': 'geojson',
-            'data': 'https://raw.githubusercontent.com/tursics/opendataday2025/refs/heads/main/denkmalliste-flensburg.geojson'
+            'data': 'denkmaeler-lauenburg-wgs84.geojson'
         },
         'layout': {
             'text-field': ['get', 'Ansprache'],
@@ -95,7 +95,7 @@ map.on('load', () => {
     function getOSMSearchLink(strasse, hausnummer, ort) {
         const street = strasse || '';
         const number = hausnummer || '';
-        const location = ort || 'Flensburg';
+        const location = ort || 'Lauenburg';
         const query = encodeURIComponent(`${street} ${number}, ${location}`);
         return `https://www.openstreetmap.org/search?query=${query}`;
     }
@@ -110,14 +110,14 @@ map.on('load', () => {
             const coordinates = e.lngLat;
             
             // Generate OSM link for the address
-            const osmLink = getOSMSearchLink(props.Strasse, props.Hausnummer, 'Flensburg');
+            const osmLink = getOSMSearchLink(props.Strasse, props.Hausnummer, 'Lauenburg');
             
             // Create popup HTML with styling
             const popupContent = `
                 <div class="popup-title">${props.Ansprache}</div>
                 <div class="popup-address">
                     <a href="${osmLink}" target="_blank" rel="noopener noreferrer" class="popup-link address-link">
-                        📍 ${props.Strasse} ${props.Hausnummer}, ${props.Kreis || 'Flensburg'}
+                        📍 ${props.Strasse} ${props.Hausnummer}, ${props.Kreis || 'Lauenburg'}
                     </a>
                 </div>
                 ${props.Art ? `<div class="popup-details">Typ: ${props.Art}</div>` : ''}
