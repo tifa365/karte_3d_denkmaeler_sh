@@ -1,23 +1,31 @@
-# Workshop Open Data Day 2025
+# 3D Monument Map - Flensburg
 
-<img src="https://github.com/tursics/opendataday2025/blob/main/flensburg.gif?raw=true">
+![Map Preview](map_preview.png)
 
-Check out the result: https://tursics.github.io/opendataday2025/
+View the live map: [Flensburg 3D Monument Map](https://tifa365.github.io/karte_3d_denkmaeler_flensburg/)
 
-## About the project
+## Project Overview
 
-We met in Flensburg on the International Open Data Day 2025 on March 1st. After a few keynote speeches in the morning, we built online maps from Scratch in the afternoon. I took up the idea of ​​the new list of monuments from Schleswig-Holstein and visualized it on a map.
+This project builds upon the excellent foundation created by Thomas Tursics during the International Open Data Day 2025 in Flensburg. Special thanks to him for establishing the initial map implementation and data processing workflow that made this enhanced version possible. You can find his repository [here](https://github.com/tursics/opendataday2025).
 
-## Implementation
+## Original Implementation
 
-1. The basic structure of a map was set up with HTML, JS, CSS and a little boilerplate. I chose MapLibre GL JS because it allows you to use vector maps that can be zoomed, rotated, tilted as desired and thus also display 3D buildings.
+The original project utilizes MapLibre GL JS to create an interactive 3D map of Flensburg's monuments using open data from Schleswig-Holstein. The data required projection conversion from UTM 32 to WGS 84 and was filtered to focus specifically on Flensburg monuments.
 
-2. In order to display data on the maps, I looked for GeoJSON files in the Open Data Portal of Schleswig-Holstein, which also contain data from Flensburg. I found these: https://opendata.schleswig-holstein.de/dataset/geodaten-denkmalliste-sh-2025-03-01
+## Enhanced Features
 
-3. Unfortunately, the contents of the GeoJSON file are not displayed on the map. In QGIS I changed the projection from UTM 32 to WGS 84 and thus converted all coordinates.
+This version expands on the original work with significant improvements:
 
-4. The resulting file was still too large to upload to GitHub. That's why I only filtered out the monuments in Flensburg in QGIS.
+- **Building Labels with Type Categorization**: Color-coded labels clearly identify different monument types
+- **Interactive Label Controls**: Elegant toggle interface for showing/hiding building labels
+- **Smooth Loading Animation**: Visual feedback during data processing
+- **Rich Information Popups**: Detailed monument information available on click
+- **External Resource Integration**: 
+  - Direct links to official Denkmalkarte entries for each monument
+  - OpenStreetMap integration for additional context
+- **Mobile-Optimized Interface**: Repositioned controls for better usability on smaller screens
 
-5. Finished.
+## Data Sources
 
-The raster data map layer from OK Lab Flensburg (https://tiles.oklabflensburg.de/fosm/{z}/{x}/{y}.png) was presented and used in the workshop. I couldn't manage that and switched to the vector layer from Basemap.de.
+- Monument data: Schleswig-Holstein Open Data Portal
+- Base map: Basemap.de vector tiles
