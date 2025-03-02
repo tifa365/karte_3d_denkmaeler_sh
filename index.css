@@ -22,6 +22,15 @@ html, body, #map {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
+/* Move controls to top left on mobile */
+@media (max-width: 768px) {
+    .controls {
+        bottom: auto;
+        top: 10px;
+        left: 10px;
+    }
+}
+
 /* Toggle Switch with Darker Violet */
 .toggle-container {
     display: flex;
